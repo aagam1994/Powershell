@@ -1,0 +1,447 @@
+<#
+.Version
+    5.1.22621.2506 
+.Author
+    Aagam Shah
+.Synopsis
+    Text Manipulation Function created for calculating BMI (Body Mass Index) and Manipulating with Text.
+
+.Description
+    In this code, we are accepting inputs from user and calculating BMI for indivilual and manipulating text.
+#>
+
+<#
+Body mass index (BMI) is a measure of body fat based on height and weight that applies to a individual for Maintaining a healthy weight as it is important for heart health.
+Creativity : Manipulating text taken in input and displaying output with color and upper lower case status.
+How I chose to do this : With the user input I would like to measure the status of heath with few inputs.
+Saving user name, height and weight to a fine in D drive.
+#>
+
+
+
+#defining function
+function Calculate-BMI 
+{
+    #defining parameters for required inputs
+    param
+    (
+        [string]$Name,
+        [double]$Weight, # in kilograms
+        [double]$Heightincm # in centimeters
+    )
+    #variable as float to calculate centimeters to meters
+    [float]$Height = $Heightincm/100
+
+    #BMI calculation formula
+    $BMI = $Weight / ($Height * $Height)
+
+    #Displaying values with respective inputs
+    Write-Host "Calculating BMI for $Name"
+    Write-Host "Weight: $Weight kg"
+    Write-Host "Height: $Height meters"
+
+    Write-Host "BMI: $BMI"
+
+    #checking BMI value with inputs taken from user and displaying respective BMI value
+    if ($BMI -lt 18.5) 
+    {
+        Write-Host "Underweight".ToLower() -ForegroundColor Yellow
+    } 
+    elseif ($BMI -ge 18.5 -and $BMI -lt 24.9) 
+    {
+        Write-Host "Normal weight".ToUpper() -ForegroundColor DarkGreen
+    } 
+    elseif ($BMI -ge 25 -and $BMI -lt 29.9) 
+    {
+        Write-Host "Overweight".ToLower() -ForegroundColor DarkRed
+    } 
+    else 
+    {
+        Write-Host "Obesity".ToUpper() -BackgroundColor Red
+    }
+}
+
+# Prompt user for inputs
+$name = Read-Host "Enter your name"
+$weight = Read-Host "Enter your weight in Kilograms"
+$height = Read-Host "Enter your height in Centimeters"
+
+# Calling the function with user inputs
+Calculate-BMI -Name $name -Weight $weight -Height $height
+
+
+# Write the user's name height and weight to the file
+Out-File -FilePath D:\$Name.txt -InputObject "Enter your name : $Name Enter your weight in Kilograms : $weight Enter your height in Centimeters : $height"
+
+#display of data saved
+Write-Host "Data of user saved to D:\$Name.txt"
+
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+<#
+.Version
+    5.1.22621.2506 
+.Author
+    Aagam Shah
+.Synopsis
+    Date Time Function for Calculating Numbers of days left for exam
+
+.Description
+    In this code, we are accepting inputs from user to Calculate the numbers of days left for exam using functions.
+#>
+
+<#
+Reference - used to create this function
+ Methods (https://learn.microsoft.com/en-us/dotnet/api/system.datetime.add?view=net-8.0) and
+ Get-Date (https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-date?view=powershell-7.3) to guide your work. 
+#>
+
+#This Function helps me to check numbers of days left for exam, so I decided to make this function.
+
+#Defining date difference function
+function Get-DateDifference 
+{
+    #providing parameters
+    param
+    (
+        [datetime]$StartDate,
+        [datetime]$EndDate
+    )
+    #syntax for Time differeciation
+    $timeSpan = New-TimeSpan -Start $StartDate -End $EndDate
+    return $timeSpan
+ 
+}
+
+#Defined function for user input from prompt
+function Get-UserInputDate 
+{
+    param([string]$prompt)
+    #using while loop to accept proper format while accepting input
+    while ($true) 
+    {
+        $inputDate = Read-Host $prompt
+        if ($inputDate -match '\d{4}-\d{2}-\d{2}') 
+        {
+            try 
+            {
+                #Syntax for Proper date format
+                $date = [datetime]::ParseExact($inputDate, "yyyy-MM-dd", [System.Globalization.CultureInfo]::InvariantCulture)
+                return $date
+            }
+            catch 
+            {
+                #Used to display if invalid format
+                Write-Host "Invalid date format. Please enter date in yyyy-MM-dd format."
+            }
+        }
+        else 
+        {
+            #Used to display if invalid format
+            Write-Host "Invalid date format. Please enter date in yyyy-MM-dd format."
+        }
+    }
+}
+
+#Displaying current date with format
+$CurrentDate = Get-Date -Format "yyyy-MM-dd"
+#Displaying current date
+Write-Host "Current Date : "$CurrentDate
+
+# Prompt user for input for all 5 subjects
+Write-Host "Please enter the 1st date (yyyy-MM-dd format):"
+$firstDate = Get-UserInputDate -prompt "1st Subject Exam Date " 
+Write-Host "Please enter the 2nd date (yyyy-MM-dd format):"
+$secondDate = Get-UserInputDate -prompt "2nd Subject Exam Date " 
+Write-Host "Please enter the 3rd date (yyyy-MM-dd format):"
+$thirdDate = Get-UserInputDate -prompt "3rd Subject Exam Date " 
+Write-Host "Please enter the 4th date (yyyy-MM-dd format):"
+$fourthDate = Get-UserInputDate -prompt "4th Subject Exam Date " 
+Write-Host "Please enter the 5th date (yyyy-MM-dd format):"
+$fifthDate = Get-UserInputDate -prompt "5th Subject Exam Date " 
+
+
+# Calculate difference
+$diff = Get-DateDifference -StartDate $CurrentDate -EndDate $firstDate
+Write-Host "Days Left for 1st Subject Exam : " -NoNewline -ForegroundColor Yellow
+Write-Output "$($diff.Days) days"
+
+#Write-Output "Days Left for $Subjectname Exam is $($diff.Days) days"
+
+
+
+# Calculate difference
+$diff = Get-DateDifference -StartDate $CurrentDate -EndDate $secondDate
+Write-Host "Days Left for 2nd Subject Exam : " -NoNewline  -ForegroundColor Gray
+Write-Output "$($diff.Days) days"
+#Write-Output "Days Left for 2nd Exam is $($diff.Days) days"
+
+
+# Calculate difference
+$diff = Get-DateDifference -StartDate $CurrentDate -EndDate $thirdDate
+Write-Host "Days Left for 3rd Subject Exam : " -NoNewline -ForegroundColor Green
+Write-Output "$($diff.Days) days"
+#Write-Output "Days Left for 3rd Exam is $($diff.Days) days"
+
+
+# Calculate difference
+$diff = Get-DateDifference -StartDate $CurrentDate -EndDate $fourthDate
+Write-Host "Days Left for 4th Subject Exam : " -NoNewline -ForegroundColor Red
+Write-Output "$($diff.Days) days"
+#Write-Output "Days Left for 4th Exam is $($diff.Days) days"
+
+
+# Calculate difference
+$diff = Get-DateDifference -StartDate $CurrentDate -EndDate $fifthDate
+Write-Host "Days Left for 5th Subject Exam : " -NoNewline -ForegroundColor Cyan
+Write-Output "$($diff.Days) days"
+#Write-Output "Days Left for 5th Exam is $($diff.Days) days"
+
+
+
+
+
+
+#---------------------------------------------------------------------------------------------
+
+
+<#
+.Version
+    5.1.22621.2506 
+.Author
+    Aagam Shah
+.Synopsis
+    Flag Function created for Displaying Country Flag using function
+
+.Description
+    In this code, we are accepting inputs from user to display flag of a country.
+#>
+
+
+
+#List of country flags, I selected these countries for complexity and creativity involved in creating flags in powershell with colors and its my dream to visit these countries to explore
+
+Write-Host "1. United Arab Emirates"
+Write-Host "2. Argentina"
+Write-Host "3. Chile"
+Write-Host "4. Thailand"
+Write-Host "5. Greece"
+
+#Taking input from user from 1 to 5 as a integer variable to display respective number country flag.
+[int]$CountryNumber = Read-host "Enter any number from 1 to 5 to view the country flag "
+
+
+# defining function body
+Function Get-CountryNum
+{
+    # defining parameter
+    param($CountryNumber)
+
+    #if else body to check the input match with respective country flag number
+If($CountryNumber -eq 1) 
+    {
+        
+        Write-Host " -------United Arab Emirates------- "
+        Write-Host "  " -BackgroundColor Red -NoNewline 
+        write-host "     " -BackgroundColor Green
+        Write-Host "  " -BackgroundColor Red -NoNewline 
+        write-host "     " -BackgroundColor White
+        Write-Host "  " -BackgroundColor Red -NoNewline 
+        write-host "     " -BackgroundColor Black
+
+    } 
+elseif ($CountryNumber -eq 2) 
+    {
+        Write-Host " -------Argentina------- "
+        Write-Host "       " -BackgroundColor Cyan 
+        Write-Host "   " -BackgroundColor White -NoNewline 
+        write-host "*" -ForegroundColor Yellow -BackgroundColor White -NoNewline
+        Write-Host "   " -BackgroundColor White 
+        write-host "       " -BackgroundColor Cyan
+    } 
+elseif ($CountryNumber -eq 3) 
+    {
+        Write-Host " -------Chile------- "
+        write-host " * " -ForegroundColor White -BackgroundColor Blue -NoNewline
+        Write-Host "     " -BackgroundColor White 
+        Write-Host "        " -BackgroundColor Red 
+    } 
+elseif ($CountryNumber -eq 4) 
+    {
+        Write-Host " -------Thailand Flag------- "
+        write-host "               " -BackgroundColor Red
+        Write-Host "               " -BackgroundColor White 
+        Write-Host "               " -BackgroundColor DarkBlue 
+        write-host "               " -BackgroundColor DarkBlue 
+        Write-Host "               " -BackgroundColor White 
+        Write-Host "               " -BackgroundColor Red
+    }
+elseif ($CountryNumber -eq 5)
+    {
+        Write-Host " -------Greece Flag------- "
+        Write-Host "    " -BackgroundColor Blue -NoNewline
+        Write-Host "  " -BackgroundColor White -NoNewline
+        Write-Host "                   " -BackgroundColor Blue 
+        Write-Host "    " -BackgroundColor Blue -NoNewline
+        Write-Host "  " -BackgroundColor White -NoNewline
+        Write-Host "    " -BackgroundColor Blue -NoNewline
+        Write-Host "               " -BackgroundColor White
+        Write-Host "          " -BackgroundColor White -NoNewline
+        Write-Host "               " -BackgroundColor Blue
+        Write-Host "    " -BackgroundColor Blue -NoNewline
+        Write-Host "  " -BackgroundColor White -NoNewline
+        Write-Host "    " -BackgroundColor Blue -NoNewline
+        Write-Host "               " -BackgroundColor White
+        Write-Host "    " -BackgroundColor Blue -NoNewline
+        Write-Host "  " -BackgroundColor White -NoNewline
+        Write-Host "                   " -BackgroundColor Blue
+        Write-Host "                         " -BackgroundColor White 
+        Write-Host "                         " -BackgroundColor Blue
+        Write-Host "                         " -BackgroundColor White 
+        Write-Host "                         " -BackgroundColor Blue
+    }
+
+    #if any input other than 1 to 5 number it will show invalid input in Red
+    else 
+    {
+        Write-Host "Invalid Input" -ForegroundColor Red
+    }
+}
+
+#calling function to display country flag of input accepted
+Get-CountryNum -CountryNumber $CountryNumber
+
+
+#-----------------------------------------------------------------------------------------------------
+
+
+<#
+.Version
+    5.1.22621.2506 
+.Author
+    Aagam Shah
+.Synopsis
+    Calculator Function created for evaluating Math expression
+
+.Description
+    In this code, we are accepting inputs from user to evaluate a math expression that is capable of handling both decimal numbers and integers.
+#>
+
+
+
+#List of Maths expression Menu, I selected these menu for maths calculation 
+
+#Enter the number from 1 to 5 from the menu
+[int]$z = Read-host "Enter any number from 1 to 5 for Calculation"
+
+#defining Mathvalues function with menu for calculation
+Function Get-Mathvalues
+{
+    param($z) 
+    #defining Menu
+        Write-Host "List of Maths Expression and Random Maths Calcuations"
+        Write-Host "1. Addition"
+        Write-Host "2. Subtraction"
+        Write-Host "3. Multiplication"
+        Write-Host "4. Division"
+        Write-Host "5. Random Math Calculation"
+    
+
+    if($z -eq 1)
+    {
+        # Addition
+        [float]$input1 = Read-Host "input value1"
+        [float]$input2 = Read-Host "input value2"
+
+        $result = $input1 + $input2
+        Write-Host "Addition of $input1  + $input2 = $result" -ForegroundColor Green
+    }
+    elseif($z -eq 2)
+    {
+        # Subtraction
+        [float]$input1 = Read-Host "input value1"
+        [float]$input2 = Read-Host "input value2"
+        $result = $input1  - $input2
+        Write-Host "Subtraction of $input1  - $input2  = $result" -ForegroundColor Red
+    }
+    elseif($z -eq 3)
+    {
+        # Multiplication
+
+        [float]$input1 = Read-Host "input value1"
+        [float]$input2 = Read-Host "input value2"
+        $result = $input1  * $input2 
+        Write-Host "Multiplication of $input1  * $input2 = $result" -ForegroundColor Gray
+    }
+    elseif($z -eq 4)
+    {
+        # Division
+
+        [float]$input1 = Read-Host "input value1"
+        [float]$input2 = Read-Host "input value2"
+        $result = $input1 / $input2
+        Write-Host "Division of $input1 / $input2 = $result" -ForegroundColor Yellow
+    }
+    elseif($z -eq 5)
+    {
+
+    #Fetching Random number
+        $random =  Get-Random -InputObject 1, 2, 3, 4, 5
+        Write-Host "Random Number is $random" -BackgroundColor Red -ForegroundColor Cyan
+    
+    #defining random function for random calculation
+        Function Get-Mathfunction
+        {
+         Param ($random)
+
+         If($random -eq 1)
+         {
+        Write-Host "How many quarters are in d dollars?" -ForegroundColor Yellow
+        $d = Read-Host "the value of d to calculate"
+            [float]$x=    $d/0.25
+            Write-Host "Answer is $x quarters" -ForegroundColor Yellow
+    }
+         elseIf($random -eq 2)
+         {
+        Write-Host "How many minutes are in h hours?" -ForegroundColor Cyan
+         [int]$h = Read-Host "the value of h to calculate"
+         [int]$a=    $h*60
+         Write-Host "Answer is $a minutes" -ForegroundColor Cyan
+    }
+         elseIf($random -eq 3)
+         {
+       Write-Host "How many hours are in d days?" -ForegroundColor Green
+        [int]$b = Read-Host "the value of d to calculate"
+            [int]$c=    $b*24
+            Write-Host "Answer is $c hours" -ForegroundColor Green
+    }
+         elseIf($random -eq 4)
+         {
+        Write-Host "How many days are in y years?" -ForegroundColor Gray
+         [int]$e = Read-Host "the value of y to calculate"
+            [int]$f=    $e*365
+            Write-Host "Answer is $f days" -ForegroundColor Gray
+    }
+         elseIf($random -eq 5)
+         {
+        Write-Host "How many months are in n years?"  -ForegroundColor Magenta
+         [int]$g = Read-Host "the value of n to calculate"
+            [int]$i=    $g*12
+            Write-Host "Answer is $i quarters" -ForegroundColor Magenta
+    }
+         Else
+         {
+        Write-Host "Invalid Input" -BackgroundColor Red
+    }
+        }
+        Get-Mathfunction -random $random
+    }
+    else
+    {
+        Write-Host "Invalid Input" -BackgroundColor Red
+    }
+}
+Get-Mathvalues -z $z 
+
