@@ -1,0 +1,233 @@
+<# 
+.Version
+	1.2
+.Author
+	Aagam Sanjay Shah
+.Date
+	October 21, 2023
+.Description
+	PowerShell Assignment 2: Hello World
+#>
+
+
+# Step 1 To create a folder
+New-Item -ItemType Directory -Path "C:\Powershell\"
+
+
+# Step 2 Prompt the user for theirmiddle name only and store it in a ritch-text file with a filename
+
+# Prompt the user for their name
+$userName = Read-Host "Please enter your name"
+
+# Define the file name
+$fileName = "C:\Powershell\$userName.txt"
+
+# Check if the file already exists
+if (Test-Path $fileName) 
+{
+    # Prompt the user to confirm if they want to delete the file
+    Write-Host "The file $fileName already exists. Do you want to delete it? (Yes/No)"
+    $userResponse = Read-Host
+
+    if ($userResponse -eq "Yes" -or $userResponse -eq "yes") 
+    {
+        # If the user confirms, delete the file
+        Remove-Item $fileName
+        Write-Host "File $fileName has been deleted." -ForegroundColor White -BackgroundColor Red
+    } 
+    else 
+    {
+        # If the user declines, inform and halt the script
+        Write-Host "Script will halt. No further actions will be taken." -ForegroundColor Red
+    }
+}
+else
+{
+	# Write the user's name to the file
+	Out-File -FilePath $fileName -InputObject $userName
+
+	# Notify the user that the name has been stored
+	 Write-Host "Your name has been stored in $fileName"
+}
+
+
+# Step 3 Show a welcome message that includes the user's name which we created and wrote to a file in Step 2.
+
+
+# Prompt the user for their name
+$userName = Read-Host "Please enter your name"
+
+# Define the file name
+$fileName = "C:\Powershell\$userName.txt"
+
+# Check if the file already exists
+if (Test-Path $fileName) 
+{
+    # Prompt the user to confirm if they want to delete the file
+    Write-Host "The file $fileName already exists. Do you want to delete it? (Yes/No)"
+    $userResponse = Read-Host
+
+    if ($userResponse -eq "Yes" -or $userResponse -eq "yes") 
+    {
+        # If the user confirms, delete the file
+        Remove-Item $fileName
+        Write-Host "File $fileName has been deleted." -ForegroundColor White -BackgroundColor Red
+    } 
+    else 
+    {
+        # If the user declines, inform and halt the script
+        Write-Host "Script will halt. No further actions will be taken." -ForegroundColor Red
+        exit
+    }
+}
+else
+{
+	# Write the user's name to the file
+	Out-File -FilePath $fileName -InputObject $userName
+
+	# Notify the user that the name has been stored
+	 Write-Host "Your name has been stored in $fileName"
+}
+
+
+# Read the user's name from the file using the subexpression
+$storedName = $(Get-Content $fileName)
+
+
+# Read File name for welcome message
+$a = Split-Path $fileName -Leaf
+
+# Display a welcome message
+Write-Host "Greetings $storedName!" $a -ForegroundColor Green
+
+
+# Step 4 Using a loop, ask the user to input seven words.
+
+# Prompt the user for their name
+$userName = Read-Host "Please enter File Name"
+
+# Define the file name
+$fileName = "C:\Powershell\$userName.txt"
+
+# Initialize a counter to keep track of the words
+$wordCount = 1
+
+# Loop to ask the user for seven words
+for ($i = 1; $i -le 7; $i++) {
+    $prompt = "Enter word #$wordCount "
+    $userWord = Read-Host $prompt
+
+    # Write the user's word to the file
+    Add-Content $filename $userWord
+
+    # Increment the word count
+    $wordCount++
+}
+
+
+# Display a message to inform the user that the words have been written to the file
+Write-Host "The words have been written to $fileName" -ForegroundColor Green
+
+
+# Step 5 Read the file (created in step 4) line-by-line and display the content with colorful text
+
+# Prompt the user for their name
+$userName = Read-Host "Please enter file name"
+
+# Define the file name
+$fileName = "C:\Powershell\$userName.txt"
+
+# Check if the file exists
+if (Test-Path $fileName) 
+{
+    # Read the file line by line and display with colorful text and line index
+    $lines = Get-Content $fileName
+    for ($i = 0; $i -lt $lines.Count; $i++) 
+    {
+        $line = $lines[$i]
+        $lineIndex = $i + 1
+        $coloredText = "Word $lineIndex : $line"
+        
+        # Display the colored text
+        Write-Host $coloredText -ForegroundColor Yellow
+    }
+} 
+else 
+{
+    Write-Host "The file $fileName does not exist." -ForegroundColor Red
+}
+
+# Step 6 Ask/Prompt the user if they want to remove the word list
+
+
+# Prompt the user for their name
+$userName = Read-Host "Please enter file name"
+
+# Define the file name
+$fileName = "C:\Powershell\$userName.txt"
+
+# Check if the file already exists
+if (Test-Path $fileName) 
+{
+    # Prompt the user to confirm if they want to delete the word list
+    Write-Host "Do you want to remove the word list ? (Yes/No)"
+    $userResponse = Read-Host
+
+    if ($userResponse -eq "Yes" -or $userResponse -eq "yes") 
+    {
+        # If the user selects "yes", delete the file and inform the user in dark red text.
+        Remove-Item $fileName
+        $a = Split-Path $fileName -Leaf
+
+        Write-Host "File $a has been deleted." -ForegroundColor DarkRed
+    } 
+    else 
+    {
+        # If the user selects "no" or any other input, inform the user that the file will not be deleted in red text.
+        Write-Host "the file will not be deleted." -ForegroundColor Red
+        exit
+    }
+}
+else
+{
+        $b = Split-Path $fileName -Leaf
+        # Notify the user that the name has been stored
+        Write-Host "Word List file name $b not found." -ForegroundColor DarkRed
+}
+
+
+# Step 7 Display the current time's seconds and milliseconds (e.g., if it is 7:44:10:16 PM, display "10 seconds, 16 milliseconds").
+
+# Get the current time
+$currentDateTime = Get-Date
+$a = Get-Date
+
+# Extract seconds and milliseconds
+$seconds = $currentDateTime.Second
+$milliseconds = $currentDateTime.Millisecond
+
+# Display the formatted time with colors on the same line
+Write-Host $a " " -NoNewline
+# Format the time with different colors
+Write-Host $currentDateTime.Second -ForegroundColor Red "seconds, " -NoNewline
+Write-Host $currentDateTime.Millisecond -ForegroundColor Green "milliseconds"
+
+
+# Step 10 Using Date elements to calculate the days difference between two dates. 
+
+# Prompt the user to enter two dates
+$startDate = Read-Host "Enter the start date (YYYY-MM-DD):"
+$endDate = Read-Host "Enter the end date (YYYY-MM-DD):"
+
+# Convert user input to DateTime objects
+$startDateObj = [datetime]::ParseExact($startDate, "yyyy-MM-dd", $null)
+$endDateObj = [datetime]::ParseExact($endDate, "yyyy-MM-dd", $null)
+
+# Calculate the date difference
+$dateDifference = $endDateObj - $startDateObj
+
+# Output the date difference in days
+Write-Host "Start Date: $startDateObj"
+Write-Host "End Date: $endDateObj"
+Write-Host "Date Difference in Days: $($dateDifference.Days)"
+
